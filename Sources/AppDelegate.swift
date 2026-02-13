@@ -8,6 +8,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var actualTimeItem: NSMenuItem?
 
     let lockFilePath = NSTemporaryDirectory() + "com.fastclock.app.lock"
+    let minutesAhead: Int = {
+        if let envValue = ProcessInfo.processInfo.environment["FASTCLOCK_MINUTES"],
+           let minutes = Int(envValue) {
+            return minutes
+        }
+        return 7
+    }()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Check for existing instance
@@ -50,15 +57,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func updateTime() {
         guard let button = statusItem?.button else { return }
 
-        // Get current date and add 7 minutes
+        // Get current date and add configured minutes
         let now = Date()
-        let sevenMinutesAhead = now.addingTimeInterval(7 * 60)
+        let adjustedTime = now.addingTimeInterval(TimeInterval(minutesAhead * 60))
 
         // Format: "Thu Feb 12 23:04"
         let formatter = DateFormatter()
         formatter.dateFormat = "EEE MMM d  HH:mm"
 
-        let timeString = formatter.string(from: sevenMinutesAhead)
+        let timeString = formatter.string(from: adjustedTime)
 
         // Use system font with adjusted letter spacing
         let font = NSFont.systemFont(ofSize: NSFont.systemFontSize)

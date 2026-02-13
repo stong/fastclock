@@ -10,6 +10,12 @@ Double-click `FastClock.app` to run. Click the menu bar item to see the actual t
 
 Only one instance runs at a time.
 
+Set `FASTCLOCK_MINUTES` to change the offset (default: 7):
+
+```bash
+FASTCLOCK_MINUTES=10 open FastClock.app
+```
+
 ## Build
 
 ```bash
